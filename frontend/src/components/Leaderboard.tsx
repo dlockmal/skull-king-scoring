@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 // import * as api from '../api'; // Not used in mock version
 
 interface UserStats {

@@ -57,9 +57,8 @@ function GameContainer() {
   const handleStartGame = async (players: string[]) => {
     setLoading(true);
     try {
-      console.log("Starting game with players:", players);
+
       const game = await api.createGame(players);
-      console.log("Game created:", game);
       setGameState(game);
       setCurrentRound(1);
       setPhase('BID');
@@ -180,7 +179,6 @@ function GameContainer() {
 
               <GameGraph
                 scores={calculateScores()}
-                currentRound={currentRound}
               />
 
               {phase === 'GAME_OVER' && (

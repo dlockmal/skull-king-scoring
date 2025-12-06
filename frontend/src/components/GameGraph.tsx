@@ -1,11 +1,8 @@
-import React from 'react';
-
 interface GameGraphProps {
     scores: { name: string; history: number[] }[];
-    currentRound: number;
 }
 
-export function GameGraph({ scores, currentRound }: GameGraphProps) {
+export function GameGraph({ scores }: GameGraphProps) {
     // Simple SVG Line Chart
     const width = 600;
     const height = 300;
