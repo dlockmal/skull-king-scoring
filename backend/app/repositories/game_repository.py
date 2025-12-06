@@ -26,7 +26,7 @@ class GameRepository:
         
         if self.use_dynamodb:
             # Convert Pydantic model to dict, handling nested models
-            item = json.loads(game.model_dump_json())
+            item = json.loads(game.json())
             self.table.put_item(Item=item)
         else:
             self.games[game_id] = game
@@ -45,7 +45,7 @@ class GameRepository:
 
     def update_game(self, game: Game):
         if self.use_dynamodb:
-            item = json.loads(game.model_dump_json())
+            item = json.loads(game.json())
             self.table.put_item(Item=item)
         else:
             self.games[game.game_id] = game
