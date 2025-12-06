@@ -50,7 +50,8 @@ jobs:
             --resolve-s3 \
             --capabilities CAPABILITY_IAM \
             --region ${{ secrets.AWS_DEFAULT_REGION }} \
-            --no-confirm-changeset
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset
 
       - name: Get API URL
         id: get-api-url
