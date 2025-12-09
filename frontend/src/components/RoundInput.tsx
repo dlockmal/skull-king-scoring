@@ -149,12 +149,12 @@ export function RoundInput({ players, roundNum, phase, currentBids, onSubmit }: 
                                 <button type="button"
                                     style={{ fontSize: '0.8rem', padding: '0.3rem', background: bonuses[player]?.pirate ? 'var(--pirate-gold)' : '#333' }}
                                     onClick={() => handleBonusChange(player, 'pirate', 30)}>
-                                    ☠️ {bonuses[player]?.pirate ? `${bonuses[player].pirate / 30} Pirates (+${bonuses[player].pirate})` : 'Pirate (+30)'}
+                                    ☠️ {bonuses[player]?.pirate ? `x${bonuses[player].pirate / 30} (+${bonuses[player].pirate})` : 'Pirate (+30)'}
                                 </button>
                                 <button type="button"
                                     style={{ fontSize: '0.8rem', padding: '0.3rem', background: bonuses[player]?.mermaid ? 'var(--pirate-gold)' : '#333' }}
                                     onClick={() => handleBonusChange(player, 'mermaid', 20)}>
-                                    🧜‍♀️ {bonuses[player]?.mermaid ? `${bonuses[player].mermaid / 20} Mermaids (+${bonuses[player].mermaid})` : 'Mermaid (+20)'}
+                                    🧜‍♀️ {bonuses[player]?.mermaid ? `x${bonuses[player].mermaid / 20} (+${bonuses[player].mermaid})` : 'Mermaid (+20)'}
                                 </button>
                                 <button type="button"
                                     style={{ fontSize: '0.8rem', padding: '0.3rem', background: bonuses[player]?.skull_king ? 'var(--pirate-gold)' : '#333' }}
