@@ -78,6 +78,7 @@ function GameContainer() {
       await api.submitBids(gameState.game_id, currentRound, bids);
       setCurrentBids(bids);
       setPhase('RESULT');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       console.error("Failed to submit bids:", error);
     }

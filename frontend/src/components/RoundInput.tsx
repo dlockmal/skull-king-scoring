@@ -23,13 +23,48 @@ export function RoundInput({ players, roundNum, phase, currentBids, onSubmit }: 
     };
 
     const handleBonusChange = (player: string, type: string, value: number) => {
-        setBonuses(prev => ({
-            ...prev,
-            [player]: {
-                ...(prev[player] || {}),
-                [type]: value
+        setBonuses(prev => {
+            const currentVal = prev[player]?.[type] || 0;
+            // Cycle logic: 0 -> value -> 2*value ... 
+            // Actually, value passed here is the base score (e.g. 30).
+            // We want to track COUNT, but the existing structure tracks SCORE.
+            // Let's change the logic to interpret 'value' as the increment step, or better yet,
+            // let's just use the current score to derive the count and increment it.
+
+            // Wait, the previous logic was: onClick={() => handleBonusChange(player, 'pirate', bonuses[player]?.pirate ? 0 : 30)}
+            // It was toggling between 0 and 30.
+
+            // New logic for Pirate (30): 0 -> 30 -> 60 -> 90 -> 120 -> 150 -> 0 (Max 5 pirates)
+            // New logic for Mermaid (20): 0 -> 20 -> 40 -> 0 (Max 2 mermaids)
+            // Others toggle as before? The prompt only mentioned Pirates/Mermaids. 
+            // "There are instances where a player can capture multiple pirates... multiples that could be captured in a single hand."
+
+            let nextVal = value; // Default behavior for non-cycle items
+
+            if (type === 'pirate') {
+                const currentScore = currentVal;
+                const count = currentScore / 30;
+                const nextCount = (count + 1) % 6; // 0 to 5
+                nextVal = nextCount * 30;
+            } else if (type === 'mermaid') {
+                const currentScore = currentVal;
+                const count = currentScore / 20;
+                const nextCount = (count + 1) % 3; // 0 to 2
+                nextVal = nextCount * 20;
+            } else {
+                // For others, keep toggle behavior (passed value is what we want to set, but let's check input)
+                // Original call: handleBonusChange(player, 'loot', bonuses[player]?.loot ? 0 : 10)
+                // So 'value' is already the target value (0 or 10). We can just use it.
             }
-        }));
+
+            return {
+                ...prev,
+                [player]: {
+                    ...(prev[player] || {}),
+                    [type]: nextVal
+                }
+            };
+        });
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -99,6 +134,8 @@ export function RoundInput({ players, roundNum, phase, currentBids, onSubmit }: 
 
                         <input
                             type="number"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
                             min="0"
                             max={phase === 'RESULT' ? roundNum : 10}
                             placeholder={phase === 'BID' ? "Bid" : "Tricks Won"}
@@ -111,13 +148,13 @@ export function RoundInput({ players, roundNum, phase, currentBids, onSubmit }: 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem' }}>
                                 <button type="button"
                                     style={{ fontSize: '0.8rem', padding: '0.3rem', background: bonuses[player]?.pirate ? 'var(--pirate-gold)' : '#333' }}
-                                    onClick={() => handleBonusChange(player, 'pirate', bonuses[player]?.pirate ? 0 : 30)}>
-                                    ☠️ Pirate (+30)
+                                    onClick={() => handleBonusChange(player, 'pirate', 30)}>
+                                    ☠️ {bonuses[player]?.pirate ? `${bonuses[player].pirate / 30} Pirates (+${bonuses[player].pirate})` : 'Pirate (+30)'}
                                 </button>
                                 <button type="button"
                                     style={{ fontSize: '0.8rem', padding: '0.3rem', background: bonuses[player]?.mermaid ? 'var(--pirate-gold)' : '#333' }}
-                                    onClick={() => handleBonusChange(player, 'mermaid', bonuses[player]?.mermaid ? 0 : 20)}>
-                                    🧜‍♀️ Mermaid (+20)
+                                    onClick={() => handleBonusChange(player, 'mermaid', 20)}>
+                                    🧜‍♀️ {bonuses[player]?.mermaid ? `${bonuses[player].mermaid / 20} Mermaids (+${bonuses[player].mermaid})` : 'Mermaid (+20)'}
                                 </button>
                                 <button type="button"
                                     style={{ fontSize: '0.8rem', padding: '0.3rem', background: bonuses[player]?.skull_king ? 'var(--pirate-gold)' : '#333' }}
